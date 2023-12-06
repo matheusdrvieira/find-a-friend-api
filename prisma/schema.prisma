@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ADOPTER
+  ORGANIZATION
+}
+
+enum UserRole {
+  BASIC
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid()) @map("IDT_USER")
+  name      String   @map("NAM_NAME")
+  email     String   @unique @map("NAM_EMAIL")
+  password  String   @map("NAM_PASSWORD")
+  type      UserType @default(ADOPTER) @map("IND_TYPE")
+  role      UserRole @default(BASIC) @map("IND_ROLE")
+  createdAt DateTime @default(now()) @map("DAT_CREATED")
+
+  Organization Organization?
+  Adoption     Adoption[]
+
+  @@map("USER")
+}
+
+model Organization {
+  id        String   @id @default(uuid()) @map("IDT_ORGANIZATION")
+  userId    String   @unique @map("IDT_USER")
+  name      String   @map("NAM_NAME")
+  phone     Int      @map("DES_PHONE")
+  createdAt DateTime @default(now()) @map("DAT_CREATED")
+
+  user    User     @relation(fields: [userId], references: [id])
+  Address Address?
+  Pet     Pet[]
+
+  @@map("ORGANIZATION")
+}
+
+model Address {
+  id             String   @id @default(uuid()) @map("IDT_ADDRESS")
+  organizationId String   @unique @map("IDT_ORGANIZATION")
+  postalCode     String   @map("DES_POSTAL_CODE")
+  uf             String   @map("DES_UF")
+  country        String   @map("DES_COUNTRY")
+  city           String   @map("DES_CITY")
+  province       String   @map("DES_PROVINCE")
+  neighbourhood  String   @map("DES_NEIGBOURHOOD")
+  lat            String   @map("DES_LAT")
+  lng            String   @map("DES_LNG")
+  createdAt      DateTime @default(now()) @map("DAT_CREATED")
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("ADDRESS")
+}
+
+model PetType {
+  id        String   @id @default(uuid()) @map("IDT_PET_TYPE")
+  name      String   @map("NAM_NAME")
+  createdAt DateTime @default(now()) @map("DAT_CREATED")
+
+  Pet Pet?
+
+  @@map("PET_TYPE")
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum PetEnergylevels {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PetIndependenceLevels {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum PetEnvironment {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+model Pet {
+  id                 String                @id @default(uuid()) @map("IDT_PET")
+  organizationId     String                @map("IDT_ORGANIZATION")
+  typeId             String                @unique @map("IDT_PET_TYPE")
+  name               String                @map("NAM_NAME")
+  description        String                @map("DES_DESCRIPTION")
+  age                Int                   @map("NUM_AGE")
+  size               PetSize               @map("IND_SIZE")
+  environment        PetEnvironment        @map("IND_ENVIRONMENT")
+  energylevels       PetEnergylevels       @map("IND_ENERGY_LEVELS")
+  independenceLevels PetIndependenceLevels @map("IND_INDEPENDENCE_LEVELS")
+  toAdopt            Boolean               @map("FLG_TO_ADOPT")
+  createdAt          DateTime              @default(now()) @map("DAT_CREATED")
+
+  organization Organization  @relation(fields: [organizationId], references: [id])
+  petType      PetType       @relation(fields: [typeId], references: [id])
+  Requirement  Requirement[]
+  Picture      Picture[]
+  Adoption     Adoption?
+
+  @@map("PET")
+}
+
+model Requirement {
+  id          String   @id @default(uuid()) @map("IDT_REQUIREMENT")
+  petId       String   @map("IDT_PET")
+  description String   @map("DES_DESCRIPTION")
+  createdAt   DateTime @default(now()) @map("DAT_CREATED")
+
+  pet Pet @relation(fields: [petId], references: [id])
+
+  @@map("REQUIREMENT")
+}
+
+model Picture {
+  id        String   @id @default(uuid()) @map("IDT_PICTURE")
+  petId     String   @map("IDT_PET")
+  picture   String   @map("DES_PICTURE")
+  createdAt DateTime @default(now()) @map("DAT_CREATED")
+
+  pet Pet @relation(fields: [petId], references: [id])
+
+  @@map("PICTURE")
+}
+
+model Adoption {
+  id        String   @id @default(uuid()) @map("IDT_ADOPTION")
+  userId    String   @map("IDT_USER")
+  petId     String   @unique @map("IDT_PET")
+  createdAt DateTime @default(now()) @map("DAT_CREATED")
+
+  user User @relation(fields: [userId], references: [id])
+  pet  Pet  @relation(fields: [petId], references: [id])
+
+  @@map("ADOPTION")
+}
