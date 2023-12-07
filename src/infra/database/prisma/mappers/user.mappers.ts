@@ -16,11 +16,13 @@ export function convertToPrisma(data: User): Prisma.UserCreateInput {
 
 export function convertToDomain(data: UserPrisma): User {
     const user: User = {
+        id: data.id,
         name: data.name,
         email: data.email,
         password: data.password,
         type: UserTypeEnum[data.type],
         role: UserRoleEnum[data.role],
+        createdAt: data.createdAt
     };
 
     return user;

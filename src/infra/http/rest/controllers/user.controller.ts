@@ -6,6 +6,10 @@ import { FastifyRequestType } from "fastify/types/type-provider";
 import { UserZodValidator } from "../validator/zod/user/user.validator";
 
 export class UserController {
+    constructor() {
+        this.create = this.create.bind(this);
+    }
+
     async create(request: FastifyRequest, response: FastifyReply) {
         try {
             const user = await this.validateUser(request.body);

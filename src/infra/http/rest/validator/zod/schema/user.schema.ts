@@ -6,6 +6,6 @@ const userTypeEnumValues = Object.values(UserTypeEnum) as [UserTypeEnum];
 export const createUserBodySchema = z.object({
     email: z.string().email(),
     name: z.string().min(3),
-    password: z.string().uuid(),
+    password: z.string(),
     type: z.enum(userTypeEnumValues),
 });
