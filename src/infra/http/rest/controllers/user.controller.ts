@@ -6,11 +6,7 @@ import { FastifyRequestType } from "fastify/types/type-provider";
 import { UserZodValidator } from "../validator/zod/user/user.validator";
 
 export class UserController {
-    constructor() {
-        this.create = this.create.bind(this);
-    }
-
-    async create(request: FastifyRequest, response: FastifyReply) {
+    public create = async (request: FastifyRequest, response: FastifyReply) => {
         try {
             const user = await this.validateUser(request.body);
 
@@ -21,7 +17,6 @@ export class UserController {
 
         } catch (err) {
             if (err instanceof CreateUserEmailException) {
-
                 return response.status(409).send(err.messageException());
             }
 
@@ -31,11 +26,10 @@ export class UserController {
 
             throw err;
         }
-    }
+    };
 
-    async validateUser(body: FastifyRequestType["body"]) {
+    private validateUser = async (body: FastifyRequestType["body"]) => {
         const validationSchema = new UserZodValidator();
-
         return await validationSchema.userBodyValidator(body);
-    }
+    };
 }

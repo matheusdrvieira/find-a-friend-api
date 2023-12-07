@@ -2,14 +2,14 @@ import { UserRoleEnum, UserTypeEnum } from "@/application/enum/user.enum";
 import { CreateUserUseCaseRequest, CreateUserUseCaseResponse } from "@/application/types/user.types";
 import { UserRepository } from "@/infra/database/repositories/user-repository";
 import { passwordHash } from "@/utils/password-hash.utils";
-import { isUniqueKeyContraint } from "@/utils/prisma-errors";
+import { isUniqueKeyContraintException } from "@/utils/prisma-errors";
 import { CreateUserEmailException } from "./errors/email-already-exists-error";
 import { CreateUserException } from "./errors/user-already-exists-error";
 
 export class CreateUserUseCase {
     constructor(private usersRepository: UserRepository) { }
 
-    async execute(body: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
+    public execute = async (body: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> => {
         const { name, email, password, type } = body;
 
         try {
@@ -27,15 +27,15 @@ export class CreateUserUseCase {
             return { user };
 
         } catch (err) {
-            if (isUniqueKeyContraint(err)) {
+            if (isUniqueKeyContraintException(err)) {
                 throw new CreateUserEmailException(email);
             }
 
             throw new CreateUserException((err as Error).message);
         }
-    }
+    };
 
-    private makeUserType(type: UserTypeEnum) {
+    private makeUserType = (type: UserTypeEnum) => {
         return type == UserTypeEnum.ADOPTER ? UserTypeEnum.ADOPTER : UserTypeEnum.ORGANIZATION;
-    }
+    };
 }

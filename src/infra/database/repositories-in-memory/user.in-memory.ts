@@ -13,7 +13,7 @@ export class UserInMemory implements UserRepository {
             password: data.password,
             role: data.role,
             type: data.type,
-            created_at: new Date(),
+            createdAt: new Date(),
         };
 
         this.USER.push(user);
