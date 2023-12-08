@@ -1,10 +1,12 @@
 import { env } from "@/config/env";
+import fastifyCookie from "@fastify/cookie";
 import fastify from "fastify";
 import { ZodError } from "zod";
 import { appRoutes } from "./infra/http/rest/routes/index.routes";
 
 export const app = fastify();
 
+app.register(fastifyCookie);
 app.register(appRoutes);
 
 app.setErrorHandler((error, _, response) => {

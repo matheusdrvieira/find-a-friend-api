@@ -38,31 +38,31 @@ model User {
 model Organization {
   id        String   @id @default(uuid()) @map("IDT_ORGANIZATION")
   userId    String   @unique @map("IDT_USER")
+  addressId String   @unique @map("IDT_ADDRESS")
   name      String   @map("NAM_NAME")
-  phone     Int      @map("DES_PHONE")
+  phone     String   @map("DES_PHONE")
   createdAt DateTime @default(now()) @map("DAT_CREATED")
 
-  user    User     @relation(fields: [userId], references: [id])
-  Address Address?
+  user    User    @relation(fields: [userId], references: [id])
+  Address Address @relation(fields: [addressId], references: [id])
   Pet     Pet[]
 
   @@map("ORGANIZATION")
 }
 
 model Address {
-  id             String   @id @default(uuid()) @map("IDT_ADDRESS")
-  organizationId String   @unique @map("IDT_ORGANIZATION")
-  postalCode     String   @map("DES_POSTAL_CODE")
-  uf             String   @map("DES_UF")
-  country        String   @map("DES_COUNTRY")
-  city           String   @map("DES_CITY")
-  province       String   @map("DES_PROVINCE")
-  neighbourhood  String   @map("DES_NEIGBOURHOOD")
-  lat            String   @map("DES_LAT")
-  lng            String   @map("DES_LNG")
-  createdAt      DateTime @default(now()) @map("DAT_CREATED")
+  id            String   @id @default(uuid()) @map("IDT_ADDRESS")
+  postalCode    String   @map("DES_POSTAL_CODE")
+  uf            String   @map("DES_UF")
+  country       String   @map("DES_COUNTRY")
+  city          String   @map("DES_CITY")
+  province      String   @map("DES_PROVINCE")
+  neighbourhood String   @map("DES_NEIGBOURHOOD")
+  lat           String   @map("DES_LAT")
+  lng           String   @map("DES_LNG")
+  createdAt     DateTime @default(now()) @map("DAT_CREATED")
 
-  organization Organization @relation(fields: [organizationId], references: [id])
+  organization Organization?
 
   @@map("ADDRESS")
 }

@@ -8,10 +8,12 @@ import { UserZodValidator } from "../validator/zod/user/user.validator";
 export class UserController {
     public create = async (request: FastifyRequest, response: FastifyReply) => {
         try {
-            const user = await this.validateUser(request.body);
+            const userValidate = await this.validateUser(request.body);
 
             const createUseCase = makeCreateUserUseCase();
-            await createUseCase.execute(user);
+            const { user } = await createUseCase.execute(userValidate);
+
+            this.makeUserCookie(user.id!, response);
 
             return response.status(201).send({ message: "User Created Successfully!" });
 
@@ -31,5 +33,12 @@ export class UserController {
     private validateUser = async (body: FastifyRequestType["body"]) => {
         const validationSchema = new UserZodValidator();
         return await validationSchema.userBodyValidator(body);
+    };
+
+    private makeUserCookie = async (userId: string, response: FastifyReply) => {
+        return response.cookie("user_id", userId, {
+            path: "/",
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        });
     };
 }
