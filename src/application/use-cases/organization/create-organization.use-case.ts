@@ -1,7 +1,7 @@
 import { makeCreateAddressUseCase } from "@/application/factories/make-create-address.use-case";
 import { Address } from "@/application/interfaces/address.interface";
 import { Organization } from "@/application/interfaces/organization.interface";
-import { CreateOrganizationUseCaseRequest, CreateOrganizationUseCaseResponse } from "@/application/types/organization.types";
+import { CreateOrganizationUseCaseRequest, CreateOrganizationUseCaseResponse } from "@/application/types/organization.type";
 import { OrganizationRepository } from "@/infra/database/repositories/organization-repository";
 import { CreateOrganizationException } from "./errors/organization-already-exists-error";
 
@@ -29,6 +29,7 @@ export class CreateOrganizationUseCase {
             return { organization };
 
         } catch (err) {
+            console.log(err);
 
             throw new CreateOrganizationException((err as Error).message);
         }

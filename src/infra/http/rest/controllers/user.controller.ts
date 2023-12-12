@@ -11,9 +11,7 @@ export class UserController {
             const userValidate = await this.validateUser(request.body);
 
             const createUseCase = makeCreateUserUseCase();
-            const { user } = await createUseCase.execute(userValidate);
-
-            this.makeUserCookie(user.id!, response);
+            await createUseCase.execute(userValidate);
 
             return response.status(201).send({ message: "User Created Successfully!" });
 
@@ -32,13 +30,7 @@ export class UserController {
 
     private validateUser = async (body: FastifyRequestType["body"]) => {
         const validationSchema = new UserZodValidator();
-        return await validationSchema.userBodyValidator(body);
-    };
 
-    private makeUserCookie = async (userId: string, response: FastifyReply) => {
-        return response.cookie("user_id", userId, {
-            path: "/",
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        });
+        return await validationSchema.userBodyValidator(body);
     };
 }

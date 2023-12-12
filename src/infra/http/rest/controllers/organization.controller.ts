@@ -1,5 +1,5 @@
 import { makeCreateOrganizationUseCase } from "@/application/factories/make-create-organization.use-case";
-import { BodyOrganization } from "@/application/types/organization.types";
+import { BodyOrganization } from "@/application/types/organization.type";
 import { CreateOrganizationException } from "@/application/use-cases/organization/errors/organization-already-exists-error";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { OrganizationZodValidator } from "../validator/zod/organization/organization.validator";
@@ -7,7 +7,7 @@ import { OrganizationZodValidator } from "../validator/zod/organization/organiza
 export class OrganizationController {
     public create = async (request: FastifyRequest, response: FastifyReply) => {
         try {
-            const organizationValidate = await this.validateOrganization(request.body as BodyOrganization, request.cookies["user_id"]!);
+            const organizationValidate = await this.validateOrganization(request.body as BodyOrganization, request.user.sub);
 
             const createUseCase = makeCreateOrganizationUseCase();
 

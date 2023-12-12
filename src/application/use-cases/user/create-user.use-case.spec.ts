@@ -1,21 +1,27 @@
 import { UserTypeEnum } from "@/application/enum/user.enum";
-import { UserInMemory } from "@/infra/database/repositories-in-memory/user.in-memory";
-import { describe, expect, it, vi } from "vitest";
-import { CreateUserUseCase } from "./create-user.use-case";
 import { PRISMA_UNIQUE_KEY_EXECEPTION_CODE } from "@/infra/database/prisma/constants/prisma.constants";
+import { UserInMemory } from "@/infra/database/repositories-in-memory/user.in-memory";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CreateUserUseCase } from "./create-user.use-case";
 import { CreateUserEmailException } from "./errors/email-already-exists-error";
 import { CreateUserException } from "./errors/user-already-exists-error";
 
-describe("Create User Use Case ", () => {
+describe("Create User Use Case", async () => {
+    let userInMemory: UserInMemory;
+    let sut: CreateUserUseCase;
+
     const userRepositoryMock = {
-        create: vi.fn()
+        create: vi.fn(),
+        findByEmail: vi.fn()
     };
 
-    it("should be able to create a user", async () => {
-        const userInMemory = new UserInMemory();
-        const createUserUseCase = new CreateUserUseCase(userInMemory);
+    beforeEach(() => {
+        userInMemory = new UserInMemory();
+        sut = new CreateUserUseCase(userInMemory);
+    });
 
-        const { user } = await createUserUseCase.execute({
+    it("should be able to create a user", async () => {
+        const { user } = await sut.execute({
             name: "Joe Doe",
             email: "joedoe@gmail.com",
             password: "123456",

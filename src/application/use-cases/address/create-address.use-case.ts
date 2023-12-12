@@ -1,4 +1,4 @@
-import { CreateAddressUseCaseRequest } from "@/application/types/address.types";
+import { CreateAddressUseCaseRequest } from "@/application/types/address.type";
 import { AddressRepository } from "@/infra/database/repositories/address-repository";
 import { CreateAddressException } from "./errors/address-already-exists-error";
 

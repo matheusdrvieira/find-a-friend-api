@@ -1,6 +1,6 @@
 import { Address } from "../interfaces/address.interface";
 import { Organization } from "../interfaces/organization.interface";
-import { CreateAddressUseCaseRequest } from "./address.types";
+import { CreateAddressUseCaseRequest } from "./address.type";
 
 export type CreateOrganizationUseCaseRequest = {
     userId: string;
@@ -15,7 +15,7 @@ export type CreateOrganizationUseCaseResponse = {
     };
 }
 
-export interface BodyOrganization {
+export type BodyOrganization = {
     name: string;
     phone: string;
     postalCode: string;

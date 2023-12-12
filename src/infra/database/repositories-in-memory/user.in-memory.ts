@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { UserRepository } from "../repositories/user-repository";
 
 export class UserInMemory implements UserRepository {
-    public USER: User[] = [];
+    public USERS: User[] = [];
 
     async create(data: User): Promise<User> {
         const user = {
@@ -16,7 +16,15 @@ export class UserInMemory implements UserRepository {
             createdAt: new Date(),
         };
 
-        this.USER.push(user);
+        this.USERS.push(user);
+
+        return user;
+    }
+
+    async findByEmail(email: string): Promise<User | null> {
+        const user = this.USERS.find((user) => user.email == email);
+
+        if (!user) return null;
 
         return user;
     }
