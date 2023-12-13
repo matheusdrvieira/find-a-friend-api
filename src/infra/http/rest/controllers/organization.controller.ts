@@ -12,8 +12,9 @@ export class OrganizationController {
             const createUseCase = makeCreateOrganizationUseCase();
 
             const { organization } = await createUseCase.execute(organizationValidate);
+            this.makeOrganizationIdCookie(organization.id!, response);
 
-            return response.status(201).send({ message: "Organization Created Successfully!", organization });
+            return response.status(201).send({ message: "Organization Created Successfully!" });
 
         } catch (err) {
             if (err instanceof CreateOrganizationException) {
@@ -44,5 +45,13 @@ export class OrganizationController {
         };
 
         return await validationSchema.ornanizationBodyValidator(organization);
+    };
+
+    private makeOrganizationIdCookie = async (organizationId: string, response: FastifyReply) => {
+
+        return response.cookie("organization_id", organizationId, {
+            path: "/",
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        });
     };
 }

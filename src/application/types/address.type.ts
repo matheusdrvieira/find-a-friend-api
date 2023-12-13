@@ -1,3 +1,5 @@
+import { Address } from "../interfaces/address.interface";
+
 export type CreateAddressUseCaseRequest = {
     postalCode: string;
     uf: string;
@@ -7,4 +9,8 @@ export type CreateAddressUseCaseRequest = {
     neighbourhood: string;
     lat: string;
     lng: string;
+}
+
+export type CreateAddressUseCaseResponse = {
+    address: Address;
 }

@@ -1,5 +1,5 @@
 import { UserRoleEnum, UserTypeEnum } from "@/application/enum/user.enum";
-import { CreateUserUseCaseRequest, CreateUserUseCaseResponse } from "@/application/types/user.types";
+import { CreateUserUseCaseRequest, CreateUserUseCaseResponse } from "@/application/types/user.type";
 import { UserRepository } from "@/infra/database/repositories/user-repository";
 import { passwordHash } from "@/utils/password-hash.utils";
 import { isUniqueKeyContraintException } from "@/utils/prisma-errors";

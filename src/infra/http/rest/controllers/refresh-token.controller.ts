@@ -9,15 +9,9 @@ export class RefreshTokenController {
             const token = await this.makeJwtToken(request, response);
             const refreshToken = await this.makeJwtRefreshToken(request, response);
 
-            return response
-                .setCookie("refreshToken", refreshToken, {
-                    path: "/",
-                    secure: true,
-                    sameSite: true,
-                    httpOnly: true
-                })
-                .status(200)
-                .send({ message: "Refresh Token Created Successfully!", token });
+            this.makeRefreshTokenCookie(refreshToken, response);
+
+            return response.status(200).send({ message: "Refresh Token Created Successfully!", token });
 
         } catch (err) {
 
@@ -34,4 +28,14 @@ export class RefreshTokenController {
 
         return await response.jwtSign({ role: request.user.role }, { sign: { sub: request.user.sub } });
     }
+
+    private makeRefreshTokenCookie = async (refreshToken: string, response: FastifyReply) => {
+
+        return response.setCookie("refreshToken", refreshToken, {
+            path: "/",
+            secure: true,
+            sameSite: true,
+            httpOnly: true
+        });
+    };
 }

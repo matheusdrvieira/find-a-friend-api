@@ -18,15 +18,9 @@ export class SessionController {
             const token = await this.makeJwtToken(response, user);
             const refreshToken = await this.makeRefreshToken(response, user);
 
-            return response
-                .setCookie("refreshToken", refreshToken, {
-                    path: "/",
-                    secure: true,
-                    sameSite: true,
-                    httpOnly: true
-                })
-                .status(201)
-                .send({ message: "Session Created Successfully!", user, token });
+            this.makeRefreshTokenCookie(refreshToken, response);
+
+            return response.status(201).send({ message: "Session Created Successfully!", token });
 
         } catch (err) {
             if (err instanceof SessionCredentialsException) {
@@ -56,4 +50,14 @@ export class SessionController {
 
         return await response.jwtSign({ role: user.role }, { sign: { sub: user.id, expiresIn: "7d" } });
     }
+
+    private makeRefreshTokenCookie = async (refreshToken: string, response: FastifyReply) => {
+
+        return response.setCookie("refreshToken", refreshToken, {
+            path: "/",
+            secure: true,
+            sameSite: true,
+            httpOnly: true
+        });
+    };
 }

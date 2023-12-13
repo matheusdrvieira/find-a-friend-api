@@ -69,10 +69,9 @@ model Address {
 
 model PetType {
   id        String   @id @default(uuid()) @map("IDT_PET_TYPE")
-  name      String   @map("NAM_NAME")
+  name      String   @unique @map("NAM_NAME")
   createdAt DateTime @default(now()) @map("DAT_CREATED")
-
-  Pet Pet?
+  Pet       Pet[]
 
   @@map("PET_TYPE")
 }
@@ -104,19 +103,19 @@ enum PetEnvironment {
 model Pet {
   id                 String                @id @default(uuid()) @map("IDT_PET")
   organizationId     String                @map("IDT_ORGANIZATION")
-  typeId             String                @unique @map("IDT_PET_TYPE")
+  typeId             String                @map("IDT_PET_TYPE")
   name               String                @map("NAM_NAME")
   description        String                @map("DES_DESCRIPTION")
   age                Int                   @map("NUM_AGE")
   size               PetSize               @map("IND_SIZE")
   environment        PetEnvironment        @map("IND_ENVIRONMENT")
-  energylevels       PetEnergylevels       @map("IND_ENERGY_LEVELS")
+  energyLevels       PetEnergylevels       @map("IND_ENERGY_LEVELS")
   independenceLevels PetIndependenceLevels @map("IND_INDEPENDENCE_LEVELS")
   toAdopt            Boolean               @map("FLG_TO_ADOPT")
   createdAt          DateTime              @default(now()) @map("DAT_CREATED")
 
   organization Organization  @relation(fields: [organizationId], references: [id])
-  petType      PetType       @relation(fields: [typeId], references: [id])
+  petType      PetType?      @relation(fields: [typeId], references: [id])
   Requirement  Requirement[]
   Picture      Picture[]
   Adoption     Adoption?
