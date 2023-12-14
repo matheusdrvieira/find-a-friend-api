@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { organizationRoutes } from "./organization.routes";
+import { petTypeRoutes } from "./pet-type.routes";
 import { petRoutes } from "./pet.routes";
-import { petTypeRoutes } from "./petType.routes";
 import { refreshTokenRoutes } from "./refresh-token.routes";
 import { sessionRoutes } from "./session.routes";
 import { userRoutes } from "./user.routes";

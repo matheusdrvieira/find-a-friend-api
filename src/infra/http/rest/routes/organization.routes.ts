@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { verifyJwt } from "../../middlewares/jwt-verify";
-import { OrganizationController } from "../controllers/organization.controller";
+import { CreateOrganizationController } from "../controllers/organization/create-organization.controller";
 
-const organizationController = new OrganizationController();
+const createOrganizationController = new CreateOrganizationController();
 
 export async function organizationRoutes(app: FastifyInstance) {
-    app.post("/", { onRequest: [verifyJwt] }, organizationController.create);
+    app.post("/", { onRequest: [verifyJwt] }, createOrganizationController.create);
 }

@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { SessionController } from "../controllers/session.controller";
+import { SessionController } from "../controllers/session/create-session.controller";
 
 const sessionController = new SessionController();
 

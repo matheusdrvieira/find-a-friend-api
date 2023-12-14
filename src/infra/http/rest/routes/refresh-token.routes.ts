@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { RefreshTokenController } from "../controllers/refresh-token.controller";
+import { RefreshTokenController } from "../controllers/refresh-token/create-refresh-token.controller";
 
 const refreshTokenController = new RefreshTokenController();
 

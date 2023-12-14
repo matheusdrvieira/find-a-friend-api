@@ -1,5 +1,6 @@
-import { makeCreatePictureUseCase } from "@/application/factories/make-create-picture.use-case";
-import { makeCreateRequirementUseCase } from "@/application/factories/make-create-requirement.use-case";
+
+import { makeCreatePictureUseCase } from "@/application/factories/pet/make-create-picture.use-case";
+import { makeCreateRequirementUseCase } from "@/application/factories/pet/make-create-requirement.use-case";
 import { CreatePetUseCaseRequest, CreatePetUseCaseResponse } from "@/application/types/pet.type";
 import { PetRepository } from "@/infra/database/repositories/pet-repository";
 import { CreatePetException } from "./errors/pet-already-exists-error";

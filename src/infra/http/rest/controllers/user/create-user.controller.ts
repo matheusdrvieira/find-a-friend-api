@@ -1,17 +1,16 @@
-import { makeCreateUserUseCase } from "@/application/factories/make-create-user.use-case";
+import { createUserValidate } from "@/application/factories-zod/user/validate-zod";
+import { makeCreateUserUseCase } from "@/application/factories/user/make-create-user.use-case";
 import { CreateUserEmailException } from "@/application/use-cases/user/errors/email-already-exists-error";
 import { CreateUserException } from "@/application/use-cases/user/errors/user-already-exists-error";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { FastifyRequestType } from "fastify/types/type-provider";
-import { UserZodValidator } from "../validator/zod/user/user.validator";
 
-export class UserController {
+export class CreateUserController {
     public create = async (request: FastifyRequest, response: FastifyReply) => {
         try {
-            const userValidate = await this.validateUser(request.body);
+            const userValidate = await createUserValidate(request.body);
 
-            const createUseCase = makeCreateUserUseCase();
-            await createUseCase.execute(userValidate);
+            const createUserUseCase = makeCreateUserUseCase();
+            await createUserUseCase.execute(userValidate);
 
             return response.status(201).send({ message: "User Created Successfully!" });
 
@@ -26,11 +25,5 @@ export class UserController {
 
             throw err;
         }
-    };
-
-    private validateUser = async (body: FastifyRequestType["body"]) => {
-        const validationSchema = new UserZodValidator();
-
-        return await validationSchema.userBodyValidator(body);
     };
 }

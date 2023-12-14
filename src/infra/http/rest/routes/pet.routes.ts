@@ -1,11 +1,15 @@
-import { UserRoleEnum } from "@/application/enum/user.enum";
 import { FastifyInstance } from "fastify";
 import { verifyJwt } from "../../middlewares/jwt-verify";
-import { verifyUserRole } from "../../middlewares/verify-user-role";
-import { PetController } from "../controllers/pet.controller";
+import { CreatePetController } from "../controllers/pet/create-pet.controller";
+import { FindByIdPetController } from "../controllers/pet/findById-pet.controller";
+import { FindManyPetController } from "../controllers/pet/findMany-pet.controller";
 
-const petController = new PetController();
+const createPetController = new CreatePetController();
+const findManyPetController = new FindManyPetController();
+const findByIdPetController = new FindByIdPetController();
 
 export async function petRoutes(app: FastifyInstance) {
-    app.post("/", { onRequest: [verifyJwt, verifyUserRole(UserRoleEnum.ADMIN)] }, petController.create);
+    app.post("/", { onRequest: [verifyJwt] }, createPetController.create);
+    app.get("/", findManyPetController.index);
+    app.get("/:id", findByIdPetController.show);
 }

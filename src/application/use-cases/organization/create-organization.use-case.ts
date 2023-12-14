@@ -1,4 +1,4 @@
-import { makeCreateAddressUseCase } from "@/application/factories/make-create-address.use-case";
+import { makeCreateAddressUseCase } from "@/application/factories/organization/make-create-address.use-case";
 import { Address } from "@/application/interfaces/address.interface";
 import { Organization } from "@/application/interfaces/organization.interface";
 import { CreateOrganizationUseCaseRequest, CreateOrganizationUseCaseResponse } from "@/application/types/organization.type";
@@ -12,8 +12,8 @@ export class CreateOrganizationUseCase {
         try {
             const { name, phone, userId } = body;
 
-            const createAddress = makeCreateAddressUseCase();
-            const { address } = await createAddress.execute(body.address);
+            const createAddressUseCase = makeCreateAddressUseCase();
+            const { address } = await createAddressUseCase.execute(body.address);
 
             const responseOrganization = await this.organizationRepository.create({
                 userId,

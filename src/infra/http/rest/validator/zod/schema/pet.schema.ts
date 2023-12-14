@@ -20,3 +20,18 @@ export const createPetBodySchema = z.object({
     environment: z.enum(petEnvironmentEnum),
     independenceLevels: z.enum(petIndependenceLevelsEnum),
 });
+
+export const getPetQuerySchema = z.object({
+    city: z.string(),
+    uf: z.string(),
+    size: z.enum(petSizeEnum).optional(),
+    energyLevels: z.enum(petEnergyLevelsEnum).optional(),
+    independenceLevels: z.enum(petIndependenceLevelsEnum).optional(),
+    age: z.string().transform((value) => Number(value)).optional(),
+    skip: z.string().default("1").transform((value) => Number(value)),
+    take: z.string().default("100").transform((value) => Number(value))
+});
+
+export const fetchPetParamsSchema = z.object({
+    id: z.string().uuid(),
+});

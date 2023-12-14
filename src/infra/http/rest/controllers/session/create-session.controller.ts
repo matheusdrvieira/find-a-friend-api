@@ -1,19 +1,18 @@
-import { makeCreateSessionUseCase } from "@/application/factories/make-create-session.use-case";
+
+import { createSessionValidate } from "@/application/factories-zod/session/validate-zod";
+import { makeCreateSessionUseCase } from "@/application/factories/session/make-create-session.use-case";
 import { User } from "@/application/interfaces/user.interface";
 import { SessionCredentialsException } from "@/application/use-cases/session/errors/invalid-credentials-error";
 import { CreateSessionException } from "@/application/use-cases/session/errors/session-already-exists-error";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { FastifyRequestType } from "fastify/types/type-provider";
-import { SessionZodValidator } from "../validator/zod/session/session.validator";
 
 export class SessionController {
     public create = async (request: FastifyRequest, response: FastifyReply) => {
         try {
-            const sessionValidate = await this.validateUser(request.body);
+            const sessionValidate = await createSessionValidate(request.body);
 
-            const createUseCase = makeCreateSessionUseCase();
-
-            const { user } = await createUseCase.execute(sessionValidate);
+            const createSessionUseCase = makeCreateSessionUseCase();
+            const { user } = await createSessionUseCase.execute(sessionValidate);
 
             const token = await this.makeJwtToken(response, user);
             const refreshToken = await this.makeRefreshToken(response, user);
@@ -33,12 +32,6 @@ export class SessionController {
 
             throw err;
         }
-    };
-
-    private validateUser = async (body: FastifyRequestType["body"]) => {
-        const validationSchema = new SessionZodValidator();
-
-        return await validationSchema.sessionBodyValidator(body);
     };
 
     private async makeJwtToken(response: FastifyReply, user: User) {

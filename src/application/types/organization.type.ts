@@ -2,6 +2,8 @@ import { Address } from "../interfaces/address.interface";
 import { Organization } from "../interfaces/organization.interface";
 import { CreateAddressUseCaseRequest } from "./address.type";
 
+// Method Create
+
 export type CreateOrganizationUseCaseRequest = {
     userId: string;
     name: string;
@@ -14,6 +16,8 @@ export type CreateOrganizationUseCaseResponse = {
         address: Address
     };
 }
+
+// Convert Body
 
 export type BodyOrganization = {
     name: string;
