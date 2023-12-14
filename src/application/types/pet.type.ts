@@ -1,5 +1,5 @@
 import { PetEnergyLevelsEnum, PetEnvironmentEnum, PetIndependenceLevelsEnum, PetSizeEnum } from "../enum/pet.enum";
-import { Pet } from "../interfaces/pet.interface";
+import { Pet, PetsToAdopt } from "../interfaces/pet.interface";
 
 // Method Create
 
@@ -37,14 +37,7 @@ export type FindManyPetUseCaseRequest = {
 }
 
 export type FindManyPetUseCaseResponse = {
-    age?: number;
-    size?: PetSizeEnum;
-    energyLevels?: PetEnergyLevelsEnum;
-    independenceLevels?: PetIndependenceLevelsEnum;
-    city: string;
-    uf: string;
-    take: number;
-    skip: number;
+    pet: PetsToAdopt
 }
 
 // Method FindById

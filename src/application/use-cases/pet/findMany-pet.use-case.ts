@@ -1,11 +1,11 @@
-import { FindManyPetUseCaseRequest } from "@/application/types/pet.type";
+import { FindManyPetUseCaseRequest, FindManyPetUseCaseResponse } from "@/application/types/pet.type";
 import { PetRepository } from "@/infra/database/repositories/pet-repository";
 import { GenericPetException } from "./errors/pet-generic-error";
 
 export class FindManyPetUseCase {
     constructor(private PetRepository: PetRepository) { }
 
-    public execute = async (query: FindManyPetUseCaseRequest) => {
+    public execute = async (query: FindManyPetUseCaseRequest): Promise<FindManyPetUseCaseResponse> => {
         try {
             const pet = await this.PetRepository.findMany(query);
 
