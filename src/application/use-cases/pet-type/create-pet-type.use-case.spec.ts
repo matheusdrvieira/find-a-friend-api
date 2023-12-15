@@ -1,33 +1,39 @@
-import { randomUUID } from "crypto";
-import { describe, expect, it, vi } from "vitest";
-import { CreateOrganizationUseCase } from "./create-organization.use-case";
-import { CreateOrganizationException } from "./errors/organization-already-exists-error";
+import { PetTypeInMemory } from "@/infra/database/repositories-in-memory/pet-type.in-memory";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CreatePetTypeUseCase } from "./create-pet-type.use-case";
+import { CreatePetTypeException } from "./errors/pet-type-already-exists-error";
 
-describe("Create Organization Use Case ", async () => {
-    const organizationRepositoryMock = {
+describe("Create Pet Type Use Case ", async () => {
+    let petTypeInMemory: PetTypeInMemory;
+    let sut: CreatePetTypeUseCase;
+
+    const petTypeRepositoryMock = {
         create: vi.fn(),
     };
 
-    const address = {
-        postalCode: "string",
-        uf: "string",
-        country: "string",
-        city: "string",
-        province: "string",
-        neighbourhood: "string",
-        lat: "string",
-        lng: "string"
-    };
+    beforeEach(() => {
+        petTypeInMemory = new PetTypeInMemory();
+        sut = new CreatePetTypeUseCase(petTypeInMemory);
+    });
 
-    it("should be able to throw an error if creating an organization fails", async () => {
-        organizationRepositoryMock.create.mockRejectedValue(new Error());
-        const createOrganizationUseCase = new CreateOrganizationUseCase(organizationRepositoryMock);
+    it("should be able to create a type of pet", async () => {
+        const { petType } = await sut.execute({
+            name: "Dog"
+        });
 
-        await expect(() => createOrganizationUseCase.execute({
-            userId: randomUUID(),
-            address: address,
-            name: "TypeScript",
-            phone: "(99) 9.9999-9999"
-        })).rejects.toThrow(CreateOrganizationException);
+        expect(petType).toMatchObject({
+            id: expect.any(String),
+            name: "Dog",
+            createdAt: expect.any(Date)
+        });
+    });
+
+    it("should be able to throw an error if creating a petType fails", async () => {
+        petTypeRepositoryMock.create.mockRejectedValue(new Error());
+        const createPetTypeUseCase = new CreatePetTypeUseCase(petTypeRepositoryMock);
+
+        expect(() => createPetTypeUseCase.execute({
+            name: "Dog"
+        })).rejects.toThrow(CreatePetTypeException);
     });
 });

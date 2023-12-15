@@ -42,11 +42,11 @@ export type FindManyPetUseCaseResponse = {
 
 // Method FindById
 
-export type FindByIdPetUseCaseRequest = {
+export type FindPetByIdUseCaseRequest = {
     id: string;
 }
 
-export type FindByIdPetUseCaseResponse = {
+export type FindPetByIdUseCaseResponse = {
     pet: Pet
 }
 

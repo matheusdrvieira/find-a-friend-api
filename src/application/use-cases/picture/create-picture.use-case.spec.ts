@@ -1,33 +1,40 @@
-// import { randomUUID } from "crypto";
-// import { describe, expect, it, vi } from "vitest";
-// import { CreateOrganizationUseCase } from "./create-organization.use-case";
-// import { CreateOrganizationException } from "./errors/organization-already-exists-error";
+import { PictureInMemory } from "@/infra/database/repositories-in-memory/picture.in-memory";
+import { randomUUID } from "crypto";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CreatePictureUseCase } from "./create-picture.use-case";
+import { CreatePictureException } from "./errors/picture-already-exists-error";
 
-// describe("Create Organization Use Case ", async () => {
-//     const organizationRepositoryMock = {
-//         create: vi.fn(),
-//     };
+describe("Create Picture Use Case ", async () => {
+    let pictureInMemory: PictureInMemory;
+    let sut: CreatePictureUseCase;
 
-//     const address = {
-//         postalCode: "string",
-//         uf: "string",
-//         country: "string",
-//         city: "string",
-//         province: "string",
-//         neighbourhood: "string",
-//         lat: "string",
-//         lng: "string"
-//     };
+    const pictureRepositoryMock = {
+        create: vi.fn(),
+    };
 
-//     it("should be able to throw an error if creating an organization fails", async () => {
-//         organizationRepositoryMock.create.mockRejectedValue(new Error());
-//         const createOrganizationUseCase = new CreateOrganizationUseCase(organizationRepositoryMock);
+    beforeEach(() => {
+        pictureInMemory = new PictureInMemory();
+        sut = new CreatePictureUseCase(pictureInMemory);
+    });
 
-//         await expect(() => createOrganizationUseCase.execute({
-//             userId: randomUUID(),
-//             address: address,
-//             name: "TypeScript",
-//             phone: "(99) 9.9999-9999"
-//         })).rejects.toThrow(CreateOrganizationException);
-//     });
-// });
+    it("should be able to create an picture", async () => {
+        const createSpyResponse = vi.spyOn(pictureInMemory, "create");
+
+        expect(() => sut.execute({
+            petId: randomUUID(),
+            pictures: ["url", "url", "url"]
+        })).not.toThrow();
+
+        expect(createSpyResponse).toHaveBeenCalled();
+    });
+
+    it("should be able to throw an error if creating an image fails", async () => {
+        pictureRepositoryMock.create.mockRejectedValue(new Error());
+        const createPictureUseCase = new CreatePictureUseCase(pictureRepositoryMock);
+
+        expect(() => createPictureUseCase.execute({
+            petId: randomUUID(),
+            pictures: ["url", "url", "url"]
+        })).rejects.toThrow(CreatePictureException);
+    });
+});

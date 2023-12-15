@@ -1,23 +1,19 @@
-import { FindByIdPetUseCaseRequest, FindByIdPetUseCaseResponse } from "@/application/types/pet.type";
+import { FindPetByIdUseCaseRequest, FindPetByIdUseCaseResponse } from "@/application/types/pet.type";
 import { PetRepository } from "@/infra/database/repositories/pet-repository";
 import { GenericPetException } from "./errors/pet-generic-error";
-import { FindPetException } from "./errors/pet-not-exists-error";
 
-export class FindByIdPetUseCase {
+export class FindPetByIdUseCase {
     constructor(private PetRepository: PetRepository) { }
 
-    public execute = async (query: FindByIdPetUseCaseRequest): Promise<FindByIdPetUseCaseResponse> => {
+    public execute = async (query: FindPetByIdUseCaseRequest): Promise<FindPetByIdUseCaseResponse> => {
         try {
             const pet = await this.PetRepository.findById(query);
 
-            if (!pet) throw new FindPetException("Pet not exists");
+            if (!pet) throw new GenericPetException("Pet not exists");
 
             return { pet };
 
         } catch (err) {
-            if (err instanceof FindPetException) {
-                throw new FindPetException((err as Error).message);
-            }
 
             throw new GenericPetException((err as Error).message);
         }

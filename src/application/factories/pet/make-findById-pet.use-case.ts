@@ -1,9 +1,9 @@
 import { PrismaPetRepository } from "@/infra/database/prisma/repositories/prisma-pet-repository";
-import { FindByIdPetUseCase } from "../../use-cases/pet/findById-pet.use-case";
+import { FindPetByIdUseCase } from "../../use-cases/pet/findById-pet.use-case";
 
-export function makeFindByIdPetUseCase() {
+export function makeFindPetByIdUseCase() {
     const prismaPetRepository = new PrismaPetRepository();
-    const findByIdPetUseCase = new FindByIdPetUseCase(prismaPetRepository);
+    const findPetByIdUseCase = new FindPetByIdUseCase(prismaPetRepository);
 
-    return findByIdPetUseCase;
+    return findPetByIdUseCase;
 }

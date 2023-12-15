@@ -1,6 +1,6 @@
 import { FindManyPetUseCaseRequest, FindManyPetUseCaseResponse } from "@/application/types/pet.type";
 import { PetRepository } from "@/infra/database/repositories/pet-repository";
-import { GenericPetException } from "./errors/pet-generic-error";
+import { ListPetException } from "./errors/pet-not-exists-error";
 
 export class FindManyPetUseCase {
     constructor(private PetRepository: PetRepository) { }
@@ -13,7 +13,7 @@ export class FindManyPetUseCase {
 
         } catch (err) {
 
-            throw new GenericPetException((err as Error).message);
+            throw new ListPetException((err as Error).message);
         }
     };
 }
