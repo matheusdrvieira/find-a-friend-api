@@ -1,5 +1,5 @@
 import { z } from "zod";
 
 export const createPetTypeBodySchema = z.object({
-    name: z.string(),
+    name: z.string().min(1),
 });

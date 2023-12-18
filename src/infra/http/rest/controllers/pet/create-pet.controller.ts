@@ -13,7 +13,7 @@ export class CreatePetController {
 
             const { pet } = await createPetUseCase.execute(petValidate);
 
-            return response.status(201).send({ message: "Organization Created Successfully!", petId: pet.id });
+            return response.status(201).send({ message: "Pet Created Successfully!", petId: pet.id });
 
         } catch (err) {
             if (err instanceof CreatePetException) {
