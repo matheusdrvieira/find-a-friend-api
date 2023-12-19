@@ -11,14 +11,14 @@ describe("Create Organization Use Case ", async () => {
     };
 
     const address = {
-        postalCode: "string",
-        uf: "string",
-        country: "string",
-        city: "string",
-        province: "string",
-        neighbourhood: "string",
-        lat: "string",
-        lng: "string"
+        postalCode: "99999999",
+        uf: "uf",
+        country: "country",
+        city: "city",
+        province: "province",
+        neighbourhood: "neighbourhood",
+        lat: "99999999",
+        lng: "-1111111"
     };
 
     it("should be able to create an organization", async () => {

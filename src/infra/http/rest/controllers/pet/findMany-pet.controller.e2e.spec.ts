@@ -1,8 +1,7 @@
 import { app } from "@/app";
 import { PetEnergyLevelsEnum, PetEnvironmentEnum, PetIndependenceLevelsEnum, PetSizeEnum } from "@/application/enum/pet.enum";
-import { UserRoleEnum, UserTypeEnum } from "@/application/enum/user.enum";
-import { PrismaUserRepository } from "@/infra/database/prisma/repositories/prisma-user-repository";
-import { hash } from "bcryptjs";
+import { authResponseAdmin } from "@/test/create-session-admin.test";
+import { authResponse } from "@/test/create-session.test";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -16,45 +15,20 @@ describe("find many pets (e2e)", async () => {
     });
 
     it("should be able to list multiple pets", async () => {
-        const prismaUserRepository = new PrismaUserRepository();
-
-        await prismaUserRepository.create({
-            name: "Joe Doe",
-            email: "joedoe@gamil.com",
-            password: await hash("123456", 8),
-            type: UserTypeEnum.ADOPTER,
-            role: UserRoleEnum.ADMIN,
-        });
-
-        const responseToken1 = await request(app.server).post("/sessions").send({
-            email: "joedoe@gamil.com",
-            password: "123456",
-        });
-
-        const { token } = responseToken1.body;
+        const usertAdmin = await authResponseAdmin(app);
 
         const petTypeId = await request(app.server)
             .post("/pet/type")
-            .set("Authorization", `Bearer ${token}`)
+            .set("Authorization", `Bearer ${usertAdmin.token}`)
             .send({
                 name: "Dog",
             });
 
-        await request(app.server).post("/users").send({
-            name: "Joe Doe 2",
-            email: "joedoe2@gmail.com",
-            password: "123456",
-            type: UserTypeEnum.ADOPTER
-        });
-
-        const responseToken2 = await request(app.server).post("/sessions").send({
-            email: "joedoe2@gmail.com",
-            password: "123456",
-        });
+        const { token } = await authResponse(app);
 
         const responseOrganization = await request(app.server)
             .post("/organizations")
-            .set("Authorization", `Bearer ${responseToken2.body.token}`)
+            .set("Authorization", `Bearer ${token}`)
             .send({
                 name: "FindAFriend",
                 phone: "99999999999",
@@ -72,7 +46,7 @@ describe("find many pets (e2e)", async () => {
 
         await request(app.server)
             .post("/pets")
-            .set("Authorization", `Bearer ${responseToken2.body.token}`)
+            .set("Authorization", `Bearer ${token}`)
             .set("Cookie", cookie)
             .send({
                 typeId: petTypeId.body.typeId,
@@ -90,7 +64,7 @@ describe("find many pets (e2e)", async () => {
 
         await request(app.server)
             .post("/pets")
-            .set("Authorization", `Bearer ${responseToken2.body.token}`)
+            .set("Authorization", `Bearer ${token}`)
             .set("Cookie", cookie)
             .send({
                 typeId: petTypeId.body.typeId,
@@ -108,7 +82,7 @@ describe("find many pets (e2e)", async () => {
 
         await request(app.server)
             .post("/pets")
-            .set("Authorization", `Bearer ${responseToken2.body.token}`)
+            .set("Authorization", `Bearer ${token}`)
             .set("Cookie", cookie)
             .send({
                 typeId: petTypeId.body.typeId,
@@ -126,7 +100,7 @@ describe("find many pets (e2e)", async () => {
 
         const response = await request(app.server)
             .get("/pets")
-            .set("Authorization", `Bearer ${responseToken2.body.token}`)
+            .set("Authorization", `Bearer ${token}`)
             .query({ city: "São Paulo" })
             .query({ uf: "SP" })
             .send();

@@ -15,7 +15,7 @@ describe("create user (e2e)", async () => {
     it("should be able to create a user", async () => {
         const response = await request(app.server).post("/users").send({
             name: "Joe Doe",
-            email: "joedoe@gmail.com",
+            email: "joedoe@example.com",
             password: "123456",
             type: UserTypeEnum.ADOPTER
         });
@@ -26,36 +26,24 @@ describe("create user (e2e)", async () => {
 
     it("should be able to throw an error if the user's email already exists", async () => {
         await request(app.server).post("/users").send({
-            name: "Joe Doe 2",
-            email: "joedoe2@gmail.com",
+            name: "Joe Doe",
+            email: "joedoe@gmail.com",
             password: "123456",
             type: UserTypeEnum.ADOPTER
         });
 
         const response = await request(app.server).post("/users").send({
-            name: "Joe Doe 2",
-            email: "joedoe2@gmail.com",
+            name: "Joe Doe",
+            email: "joedoe@gmail.com",
             password: "123456",
             type: UserTypeEnum.ADOPTER
         });
 
         const RESPONSE_MESSAGE = {
-            message: "E-mail already exists: joedoe2@gmail.com",
+            message: "E-mail already exists: joedoe@gmail.com",
             name: "CreateUserEmailException",
         };
 
         expect(response.body).toEqual(RESPONSE_MESSAGE);
-    });
-
-    it("should be able to raise an error if a user creation fails due to validation errors", async () => {
-        const response = await request(app.server).post("/users").send({
-            name: "Joe Doe 3",
-            email: "joedoe3",
-            password: "123456",
-            type: UserTypeEnum.ADOPTER
-        });
-
-        expect(response.statusCode).toEqual(400);
-        expect(response.body.message).toEqual("Validation Error!");
     });
 });

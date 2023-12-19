@@ -19,11 +19,11 @@ describe("Create Address Use Case ", async () => {
     it("should be able to create a address", async () => {
         const { address } = await sut.execute({
             postalCode: "99999000",
-            uf: "string",
-            country: "string",
-            city: "string",
-            province: "string",
-            neighbourhood: "string",
+            uf: "uf",
+            country: "country",
+            city: "city",
+            province: "province",
+            neighbourhood: "neighbourhood",
             lat: "99999999",
             lng: "-11111111"
         });
@@ -31,11 +31,11 @@ describe("Create Address Use Case ", async () => {
         const MESSAGE_RESPONSE_ADDRESS = {
             id: expect.any(String),
             postalCode: "99999000",
-            uf: "string",
-            country: "string",
-            city: "string",
-            province: "string",
-            neighbourhood: "string",
+            uf: "uf",
+            country: "country",
+            city: "city",
+            province: "province",
+            neighbourhood: "neighbourhood",
             lat: "99999999",
             lng: "-11111111",
             createdAt: expect.any(Date),
@@ -50,11 +50,11 @@ describe("Create Address Use Case ", async () => {
 
         expect(() => createUserUseCase.execute({
             postalCode: "99999000",
-            uf: "string",
-            country: "string",
-            city: "string",
-            province: "string",
-            neighbourhood: "string",
+            uf: "uf",
+            country: "country",
+            city: "city",
+            province: "province",
+            neighbourhood: "neighbourhood",
             lat: "99999999",
             lng: "-11111111"
         })).rejects.toThrow(CreateAddressException);
